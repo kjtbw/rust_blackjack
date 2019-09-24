@@ -134,63 +134,13 @@ impl Player {
                 }
             },
         }
-        // process::exit(1);
     }
 }
-
-
-// #[derive(Debug)]
-// enum Action {
-//     Hit,
-//     Stand,
-// }
-
-// impl Action {
-//     fn play(self, player:&mut Player, field:&mut Field) {
-//         match self{
-//             Action::Hit => self.hit(player, field),
-//             Action::Stand => self.stand(player, field),
-//         }
-//     }
-
-
-//     fn stand(self, player:&mut Player, filed:&mut Field){
-//     }
-// }
-
-// #[derive(Debug)]
-// struct Field{
-//     dealer: Player,
-//     player: Player,
-//     deck: Deck,
-//     turn_player: Player
-// }
-
-// impl Field {
-//     fn new(player_tip:u32) -> Field {
-//         dealer = Player::new(0);
-//         Field {
-//             dealer: self.dealer,
-//             player: Player::new(player_tip),
-//             deck: Deck::new(),
-//             turn_player: dealer
-//         }
-//     }
-// }
-
-
-// 現状: tipなしならできてる
-// しかし，tipかけようとして，途中
-// あらかた処理は書いたが，hitしてもfeeをとられるようになっている，ここを，feeがあれば，とらないってしたい
-// <- 完了
-// hit と standしかないので，splitとかもしたい <- そもそも，actionをまとめたい
-
 
 fn main() {
     let mut d = Deck::new();
     let mut player = Player::new(5.0);
     let mut dealer = Player::new(0.0);
-
 
     let mut fee = 0.0;
     loop{
@@ -244,10 +194,5 @@ fn main() {
             },
             _ => println!("No action"),
         }
-        // if player.tip == 0.0 {
-        //     println!("Your tip is 0, So Let's stand!");
-        //     player.stand(&mut dealer, fee);
-        //     fee = 0.0
-        // }
     }
 }
