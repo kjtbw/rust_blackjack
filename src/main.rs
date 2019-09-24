@@ -18,6 +18,27 @@ impl Card{
     }
 }//end impl Card
 
+// for compare Card struct
+impl Ord for Card {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.n.cmp(&other.n)
+    }
+}
+
+impl PartialOrd for Card {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl PartialEq for Card {
+    fn eq(&self, other: &Self) -> bool {
+        self.n == other.n
+    }
+}
+
+impl Eq for Card {}
+
 #[derive(Debug)]
 struct Deck{
     cards: Vec<Card>,
