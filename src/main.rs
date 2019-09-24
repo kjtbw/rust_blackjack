@@ -130,50 +130,31 @@ impl Player {
     fn stand(&mut self, opponent:&mut Player, fee:f32){
         let player_n = self.hand.calc();
         let opponent_n = opponent.hand.calc();
-        println!("Your score: {}, Opponent score: {}", player_n, opponent_n);
-        match player_n.cmp(&21){
+        println!("\nYour score: {}, Opponent score: {}", player_n, opponent_n);
+        match opponent_n.cmp(&21){
             Ordering::Greater => {
-                println!("You Lose!, Over 21");
+                println!("You Win!, Opponent Over 21");
+                self.tip = self.tip + fee + fee*1.0;
             },
-            Ordering::Equal => {
-                match opponent_n.cmp(&21){
+            _ => {
+                match player_n.cmp(&opponent_n){
+                    Ordering::Greater => {
+                        println!("You Win!, Over Opponent");
+                        if player_n == 21 {
+                            self.tip = self.tip + fee + fee*1.5;
+                        } else {
+                            self.tip = self.tip + fee + fee*1.0;
+                        }
+                    },
                     Ordering::Equal => {
                         println!("Draw");
                         self.tip = self.tip + fee;
                     },
-                    _ => {
-                        println!("You Win!, Equal to 21");
-                        self.tip = self.tip + fee + fee*1.5;
-                    }
-                }
-            },
-            Ordering::Less => {
-                match opponent_n.cmp(&21){
-                    Ordering::Greater => {
-                        println!("You Win!, Opponent Over 21");
-                        self.tip = self.tip + fee + fee*1.0;
-                    },
-                    Ordering::Equal => {
-                        println!("You Lose!, Opponent Equal to 21");
-                    },
                     Ordering::Less => {
-                        match player_n.cmp(&opponent_n){
-                            Ordering::Greater => {
-                                println!("You Win!, Over Opponent");
-                                self.tip = self.tip + fee + fee*1.0;
-                            },
-                            Ordering::Equal => {
-                                println!("Draw");
-                                self.tip = self.tip + fee;
-                            },
-                            Ordering::Less => {
-                                println!("You Lose!, Less than Oppponent");
-                            },
-                        }
-
+                        println!("You Lose!, Less than Oppponent");
                     },
                 }
-            },
+            }
         }
     }
 }
@@ -212,28 +193,36 @@ fn main() {
 
         // player action 処理
         let mut guess = String::new();
-        println!("Please input your action(hit or stand)");
-        println!("Your Hand:{:?}, Your Tip:{}", player.hand, player.tip);
-        println!("Dealer Hand Number:{}, Dealer One Hand:{:?}", dealer.hand.len(),dealer.hand[0]);
+        let score = player.hand.calc();
+        println!("\nPlease input your action(hit or stand)");
+        println!("Your Hands: {:?}\nYour Score: {}\nBet: {}\nYour Tip:{}", player.hand, score,fee, player.tip);
+        println!("Dealer One Hand: {:?}", dealer.hand[0]);
         io::stdin().read_line(&mut guess).expect("Failed to read line");
         guess.pop();// 末尾の改行削除
+        println!(""); //改行
+
         match guess.as_str() {
             "hit" => {
                 player.hit(&mut d);
-                match dealer.hand.calc().cmp(&17){
-                    Ordering::Less => {dealer.hit(&mut d);},
-                    _ => {},
+                println!("Your new card: {:?}", player.hand.last().unwrap());
+                let score = player.hand.calc();
+                if score > 21 {
+                    println!("Your hand:{:?}", player.hand);
+                    println!("Your Score({}) over 21!, You Lose!", score);
+                    fee = 0.0;
                 }
             },
             "stand" => {
-                match dealer.hand.calc().cmp(&17){
-                    Ordering::Less => {dealer.hit(&mut d);},
-                    _ => {},
+                println!("Dealer Hand:{:?}", dealer.hand);
+                while dealer.hand.calc() < 17 {
+                    dealer.hit(&mut d);
+                    println!("Dealer Hand:{:?}", dealer.hand);
                 }
                 player.stand(&mut dealer, fee);
-                fee=0.0
+                fee = 0.0
             },
             _ => println!("No action"),
         }
+        println!(""); //改行
     }
 }
