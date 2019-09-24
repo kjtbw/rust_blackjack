@@ -70,18 +70,38 @@ impl Deck{
         let i = rng.gen_range(1, self.cards.len());
         self.cards.remove(i)
     }
-
 }// end impl Deck
 
 pub trait CardCollection {
-    fn calc(&self) -> u32;
+    fn calc(&mut self) -> u32;
 }
 
 impl CardCollection for Vec<Card> {
-    fn calc(&self) -> u32{
+    fn calc(&mut self) -> u32{
+        let tmp = self;
         let mut n = 0;
-        for c in self.iter() {
+        // first loop, calc other `A`
+        for c in tmp.iter() {
+            if c.n == 1 {
+                continue;
+            }
             n = n + c.n;
+        }
+
+        // second loop, calc `A`
+        for c in tmp.iter(){
+            if c.n != 1 {
+                continue;
+            }
+
+            match n.cmp(&10){
+                Ordering::Greater => {
+                    n = n + 1;
+                },
+                _ => {
+                    n = n + 11
+                }
+            }
         }
         n
     }
