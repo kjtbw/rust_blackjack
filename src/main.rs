@@ -53,7 +53,7 @@ impl Deck{
                 let c = Card::new(s.to_string(), n);
                 cards.push(c);
                 if n == 10 {
-                    for i in 1..4{
+                    for _i in 1..4{
                         let c = Card::new(s.to_string(), n);
                         cards.push(c);
                     }
@@ -165,8 +165,11 @@ fn main() {
     let mut dealer = Player::new(0.0);
 
     let mut fee = 0.0;
+    println!("Notion!: In this game, `A` deal with 11. But, if your score is greater than 21, `A` deal with 1 \n");
+
     loop{
         if fee == 0.0 {
+            // game 開始処理
             player.hand = Vec::new();
             dealer.hand = Vec::new();
             player.hit(&mut d);
@@ -176,7 +179,7 @@ fn main() {
 
             // bet 処理
             let mut guess = String::new();
-            println!("How tip you paid?(Your tip:{})", player.tip);
+            println!("Start!\nHow tip you paid?(Your tip:{})", player.tip);
             io::stdin().read_line(&mut guess).expect("Failed to read line");
             guess.pop();// 末尾の改行削除
             fee = guess.parse().unwrap();
